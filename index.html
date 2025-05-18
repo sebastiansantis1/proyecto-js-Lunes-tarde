@@ -1,57 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        #average{
-            margin: 16px 0;
-            padding: 10px;
-            background-color: aqua;
-            border: 1px solid #04167c;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #04167c;
-
-        }
-    </style>
+    <title>Gestor de Notas Front-End</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h2>Notas Front-End</h2>
-    <div id="average">Promedio General del Curso : N/A</div>
-<form id="studentForm">
-    <div>
-        <label for="name">Nombre:</label>
-        <input type="text" id="name" required>
-    </div>
-    <div>
-        <label for="lastName">Apellido:</label>
-        <input type="text" id="lastName" required>
-    </div>
-    <div>
-        <label for="date">Fecha:</label>
-        <input type="date" id="date" required>
-    </div>
-    <div>
-        <label for="grade">Nota:</label>
-        <input type="number" id="grade" step="0.1" min="1" max="7" required>
-    </div>
-    <button type="submit">Guardar Alumno</button>
-</form>
-<table id="studentsTable" border="1" cellpadding="8" cellspacing="0">
-<thead>
-    <tr>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Nota</th>
-        <th>Fecha</th>
-    </tr>
-</thead>
-<tbody>
-    <!--Datos de las filas de cada alumno-->
-</tbody>     
-</table>
+    <div id="average">Promedio General del Curso: N/A</div>
+    
+    <form id="studentForm">
+        <div>
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" required>
+            <div id="name-error" class="error-message">Por favor ingrese un nombre válido</div>
+        </div>
+        <div>
+            <label for="lastName">Apellido:</label>
+            <input type="text" id="lastName" required>
+            <div id="lastName-error" class="error-message">Por favor ingrese un apellido válido</div>
+        </div>
+        <div>
+            <label for="date">Fecha:</label>
+            <input type="date" id="date" required>
+            <div id="date-error" class="error-message">Por favor seleccione una fecha</div>
+        </div>
+        <div>
+            <label for="grade">Nota:</label>
+            <input type="number" id="grade" step="0.1" min="1" max="7" required>
+            <div id="grade-error" class="error-message">La nota debe estar entre 1.0 y 7.0</div>
+        </div>
+        <button type="submit">Guardar Alumno</button>
+    </form>
+    
+    <table id="studentsTable">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fecha</th>
+                <th>Nota</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--Datos de las filas de cada alumno-->
+        </tbody>     
+    </table>
 
     <script src="script.js"></script>
 </body>
