@@ -87,12 +87,30 @@ function addStudentToTable(student) {
         <td>${student.lastName}</td>
         <td>${student.date}</td>
         <td>${student.grade.toFixed(1)}</td>
-        <td> <button class="delete-btn">Eliminar</button> </td>`;
+        <td> <button class="delete-btn">Eliminar</button> <button class="edit-btn">Editar</button> </td>`;
         row.querySelector(".delete-btn").addEventListener("click",function(){
             deleteEstudiante(student,row);
+        row.querySelector(".edit-btn").addEventListener("click",function(){
+            editarEstudiante(student,row);
+        })
         });
     tableBody.appendChild(row);
 }
+
+function editarEstudiante(){
+    const row = document.replaceChild("tr");
+    row.innerHTML = `
+        <td>${student.name}</td>
+        <td>${student.lastName}</td>
+        <td>${student.date}</td>
+        <td>${student.grade.toFixed(1)}</td>
+        <td> <button class="delete-btn">Eliminar</button> <button class="edit-btn">Editar</button> </td>`;
+        }
+    tableBody.appendChild(row);
+
+
+
+
 
 function deleteEstudiante(student,row){
     const index=students.indexOf(student);
