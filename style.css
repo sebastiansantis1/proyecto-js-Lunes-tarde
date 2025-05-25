@@ -114,3 +114,11 @@ tr:hover {
     margin-top: 5px;
     display: none;
 }
+
+button.updating {
+    background-color: #ff9800 !important;
+}
+
+button.updating:hover {
+    background-color: #e68a00 !important;
+}

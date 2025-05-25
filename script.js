@@ -27,7 +27,7 @@ document.getElementById("grade").addEventListener("input", function() {
     gradeError.style.display = (!isNaN(value) && value >= 1 && value <= 7) ? "none" : "block";
 });
 
-form.addEventListener("submit", function(e) {
+function handleSubmit(e) {
     e.preventDefault();
 
     const name = document.getElementById("name").value.trim();
@@ -78,7 +78,9 @@ form.addEventListener("submit", function(e) {
     addStudentToTable(student);
     calcularPromedio();
     this.reset();
-});
+}
+
+form.addEventListener("submit", handleSubmit);
 
 function addStudentToTable(student) {
     const row = document.createElement("tr");
@@ -87,44 +89,129 @@ function addStudentToTable(student) {
         <td>${student.lastName}</td>
         <td>${student.date}</td>
         <td>${student.grade.toFixed(1)}</td>
-        <td> <button class="delete-btn">Eliminar</button> <button class="edit-btn">Editar</button> </td>`;
-        row.querySelector(".delete-btn").addEventListener("click",function(){
-            deleteEstudiante(student,row);
-        row.querySelector(".edit-btn").addEventListener("click",function(){
-            editarEstudiante(student,row);
-        })
-        });
+        <td><button class="delete-btn">Eliminar</button> <button class="edit-btn">Editar</button></td>`;
+    
+    row.querySelector(".delete-btn").addEventListener("click", function() {
+        deleteEstudiante(student, row);
+    });
+    
+    row.querySelector(".edit-btn").addEventListener("click", function() {
+        editarEstudiante(student, row);
+    });
+    
     tableBody.appendChild(row);
 }
 
-function editarEstudiante(){
-    const row = document.replaceChild("tr");
-    row.innerHTML = `
-        <td>${student.name}</td>
-        <td>${student.lastName}</td>
-        <td>${student.date}</td>
-        <td>${student.grade.toFixed(1)}</td>
-        <td> <button class="delete-btn">Eliminar</button> <button class="edit-btn">Editar</button> </td>`;
+function editarEstudiante(student, row) {
+    // Llenar el formulario con los datos del estudiante
+    document.getElementById("name").value = student.name;
+    document.getElementById("lastName").value = student.lastName;
+    document.getElementById("date").value = student.date;
+    document.getElementById("grade").value = student.grade;
+
+    // Cambiar el texto y estilo del botón
+    const submitButton = form.querySelector("button[type='submit']");
+    submitButton.textContent = "Actualizar Alumno";
+    submitButton.classList.add("updating");
+
+    // Guardar el índice del estudiante que se está editando
+    form.dataset.editingIndex = students.indexOf(student);
+
+    // Cambiar temporalmente el manejador del evento submit
+    form.removeEventListener("submit", handleSubmit);
+    
+    function handleUpdate(e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const lastName = document.getElementById("lastName").value.trim();
+        const date = document.getElementById("date").value.trim();
+        const grade = parseFloat(document.getElementById("grade").value);
+
+        // Validación de campos
+        let isValid = true;
+
+        if (!name) {
+            nameError.style.display = "block";
+            isValid = false;
+        } else {
+            nameError.style.display = "none";
         }
-    tableBody.appendChild(row);
 
+        if (!lastName) {
+            lastNameError.style.display = "block";
+            isValid = false;
+        } else {
+            lastNameError.style.display = "none";
+        }
 
+        if (!date) {
+            dateError.style.display = "block";
+            isValid = false;
+        } else {
+            dateError.style.display = "none";
+        }
 
+        if (isNaN(grade) || grade < 1 || grade > 7) {
+            gradeError.style.display = "block";
+            isValid = false;
+        } else {
+            gradeError.style.display = "none";
+        }
 
+        if (!isValid) return;
 
-function deleteEstudiante(student,row){
-    const index=students.indexOf(student);
-    if(index>-1){
-        students.splice(index,1);
+        // Actualizar el estudiante
+        const index = parseInt(form.dataset.editingIndex);
+        if (index >= 0 && index < students.length) {
+            students[index] = { name, lastName, date, grade };
+            
+            // Actualizar la fila en la tabla
+            row.innerHTML = `
+                <td>${name}</td>
+                <td>${lastName}</td>
+                <td>${date}</td>
+                <td>${grade.toFixed(1)}</td>
+                <td><button class="delete-btn">Eliminar</button> <button class="edit-btn">Editar</button></td>`;
+            
+            // Volver a agregar los event listeners
+            row.querySelector(".delete-btn").addEventListener("click", function() {
+                deleteEstudiante(students[index], row);
+            });
+            row.querySelector(".edit-btn").addEventListener("click", function() {
+                editarEstudiante(students[index], row);
+            });
+        }
+
+        // Restaurar el formulario
+        form.reset();
+        submitButton.textContent = "Guardar Alumno";
+        submitButton.classList.remove("updating");
+        delete form.dataset.editingIndex;
+        calcularPromedio();
+
+        // Restaurar el manejador original
+        form.removeEventListener("submit", handleUpdate);
+        form.addEventListener("submit", handleSubmit);
+    }
+
+    form.addEventListener("submit", handleUpdate);
+}
+
+function deleteEstudiante(student, row) {
+    const index = students.indexOf(student);
+    if (index > -1) {
+        students.splice(index, 1);
         calcularPromedio();
         row.remove();
     }
 }
 
-
 function calcularPromedio() {
     if (students.length === 0) {
         averageDiv.textContent = "Promedio General del Curso: N/A";
+        averageDiv.style.backgroundColor = "#e3f2fd";
+        averageDiv.style.color = "#0d47a1";
         return;
     }
     
